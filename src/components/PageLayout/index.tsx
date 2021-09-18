@@ -13,10 +13,13 @@ const PageLayout: React.FC = () => {
   const oneLetter = oneKey !== null ? letters[oneKey] : null;
 
   const handleReset = () => {
+    const key = Math.floor(Math.random() * 7);
+    localStorage.setItem("lob_1key", key.toString());
     setLetters(LETTERS);
     setOrders([]);
     setFlips([]);
     setShowConfirm(null);
+    setOneKey(key);
   };
 
   React.useEffect(() => {
@@ -27,81 +30,96 @@ const PageLayout: React.FC = () => {
   return (
     <div className="flex h-screen">
       <div className="w-8/12 flex flex-column items-center justify-center">
-        <div className="flex flex-row max-h-max">
-          {orders.map((letter, index) => (
-            <CardWrapper key={index}>
-              <Card
-                key={index}
-                label={letter}
-                value={letter === oneLetter ? 1 : 0}
-                status={fullOrders ? "selected" : "default"}
-                flipped={flips.some((flip) => flip === letter)}
-                onFlipped={() => {
-                  const twoLeft = flips.length === 5;
-
-                  if (orders[0] !== letter && fullOrders && !twoLeft) {
-                    setFlips([...flips, letter]);
-                  }
-
-                  if (twoLeft) {
-                    setShowConfirm(letter);
-                  } else {
-                    setFlips([...flips, letter]);
-                  }
-                }}
-              />
-            </CardWrapper>
-          ))}
-
-          {Array.from(Array(LETTERS.length - orders.length).keys()).map(
-            (_key, index) => (
-              <CardWrapper key={index}>
-                <Card key={index} label="?" value={0} status="default" />
-              </CardWrapper>
-            )
-          )}
-        </div>
-
-        {!!showConfirm && (
+        {oneKey !== null ? (
           <>
-            <div className="py-4"></div>
-            <div className="flex items-center justify-center">
-              <button
-                className="bg-blue-600 px-4 py-2 border-2 border-blue-600 rounded text-white max-w-max"
-                onClick={() => {
-                  setFlips([...flips, showConfirm]);
-                  setShowConfirm(null);
-                }}
-              >
-                Reveal?
-              </button>
-            </div>
-          </>
-        )}
-
-        {!fullOrders && (
-          <>
-            <div className="py-4"></div>
             <div className="flex flex-row max-h-max">
-              {letters.map((letter, index) => {
-                const isSelected = orders.some((item) => item === letter);
+              {orders.map((letter, index) => (
+                <CardWrapper key={index}>
+                  <Card
+                    key={index}
+                    label={letter}
+                    value={letter === oneLetter ? 1 : 0}
+                    status={fullOrders ? "selected" : "default"}
+                    flipped={flips.some((flip) => flip === letter)}
+                    onFlipped={() => {
+                      const twoLeft = flips.length === 5;
 
-                return (
+                      if (orders[0] !== letter && fullOrders && !twoLeft) {
+                        setFlips([...flips, letter]);
+                      }
+
+                      if (twoLeft) {
+                        setShowConfirm(letter);
+                      } else {
+                        setFlips([...flips, letter]);
+                      }
+                    }}
+                  />
+                </CardWrapper>
+              ))}
+
+              {Array.from(Array(LETTERS.length - orders.length).keys()).map(
+                (_key, index) => (
                   <CardWrapper key={index}>
-                    {!isSelected && (
-                      <Card
-                        label={letter}
-                        status="selected"
-                        onSelect={() => {
-                          setOrders([...orders, letter]);
-                        }}
-                      />
-                    )}
+                    <Card key={index} label="?" value={0} status="default" />
                   </CardWrapper>
-                );
-              })}
+                )
+              )}
             </div>
+
+            {!!showConfirm && (
+              <>
+                <div className="py-4"></div>
+                <div className="flex items-center justify-center">
+                  <button
+                    className="bg-blue-600 px-4 py-2 border-2 border-blue-600 rounded text-white max-w-max"
+                    onClick={() => {
+                      setFlips([...flips, showConfirm]);
+                      setShowConfirm(null);
+                    }}
+                  >
+                    Reveal?
+                  </button>
+                </div>
+              </>
+            )}
+
+            {!fullOrders && (
+              <>
+                <div className="py-4"></div>
+                <div className="flex flex-row max-h-max">
+                  {letters.map((letter, index) => {
+                    const isSelected = orders.some((item) => item === letter);
+
+                    return (
+                      <CardWrapper key={index}>
+                        {!isSelected && (
+                          <Card
+                            label={letter}
+                            status="selected"
+                            onSelect={() => {
+                              setOrders([...orders, letter]);
+                            }}
+                          />
+                        )}
+                      </CardWrapper>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </>
+        ) : (
+          <div className="flex items-center justify-center">
+            <button
+              className="bg-blue-600 px-4 py-2 border-2 border-blue-600 rounded text-white max-w-max"
+              onClick={() => {
+                handleReset();
+              }}
+            >
+              START
+            </button>
+          </div>
         )}
       </div>
 
