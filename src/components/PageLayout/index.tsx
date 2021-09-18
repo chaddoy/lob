@@ -1,30 +1,30 @@
-import React from "react";
-import Card, { CardWrapper } from "../Card";
+import React from 'react'
+import Card, { CardWrapper } from '../Card'
 
-const LETTERS = Array.from("abcdefg".toUpperCase());
+const LETTERS = Array.from('abcdefg'.toUpperCase())
 
 const PageLayout: React.FC = () => {
-  const [oneKey, setOneKey] = React.useState<number | null>(null);
-  const [letters, setLetters] = React.useState<string[]>(LETTERS);
-  const [orders, setOrders] = React.useState<string[]>([]);
-  const [flips, setFlips] = React.useState<string[]>([]);
-  const [showConfirm, setShowConfirm] = React.useState<string | null>(null);
-  const fullOrders = orders.length === LETTERS.length;
-  const oneLetter = oneKey !== null ? letters[oneKey] : null;
+  const [oneKey, setOneKey] = React.useState<number | null>(null)
+  const [letters, setLetters] = React.useState<string[]>(LETTERS)
+  const [orders, setOrders] = React.useState<string[]>([])
+  const [flips, setFlips] = React.useState<string[]>([])
+  const [showConfirm, setShowConfirm] = React.useState<string | null>(null)
+  const fullOrders = orders.length === LETTERS.length
+  const oneLetter = oneKey !== null ? letters[oneKey] : null
 
   const handleReset = () => {
-    localStorage.removeItem("lob_1key");
-    setLetters(LETTERS);
-    setOrders([]);
-    setFlips([]);
-    setShowConfirm(null);
-    setOneKey(null);
-  };
+    localStorage.removeItem('lob_1key')
+    setLetters(LETTERS)
+    setOrders([])
+    setFlips([])
+    setShowConfirm(null)
+    setOneKey(null)
+  }
 
   React.useEffect(() => {
-    const key = parseInt(localStorage.getItem("lob_1key") || "-1", 10);
-    setOneKey(key >= 0 ? key : null);
-  }, []);
+    const key = parseInt(localStorage.getItem('lob_1key') || '-1', 10)
+    setOneKey(key >= 0 ? key : null)
+  }, [])
 
   return (
     <div className="flex h-screen">
@@ -38,32 +38,32 @@ const PageLayout: React.FC = () => {
                     key={index}
                     label={letter}
                     value={letter === oneLetter ? 1 : 0}
-                    status={fullOrders ? "selected" : "default"}
+                    status={fullOrders ? 'selected' : 'default'}
                     flipped={flips.some((flip) => flip === letter)}
                     onFlipped={() => {
-                      const twoLeft = flips.length === 5;
+                      const twoLeft = flips.length === 5
 
                       if (orders[0] !== letter && fullOrders && !twoLeft) {
-                        setFlips([...flips, letter]);
+                        setFlips([...flips, letter])
                       }
 
                       if (twoLeft) {
-                        setShowConfirm(letter);
-                      } else {
-                        setFlips([...flips, letter]);
+                        setShowConfirm(letter)
+                      }
+
+                      if (flips.length >= 6) {
+                        setFlips([...flips, letter])
                       }
                     }}
                   />
                 </CardWrapper>
               ))}
 
-              {Array.from(Array(LETTERS.length - orders.length).keys()).map(
-                (_key, index) => (
-                  <CardWrapper key={index}>
-                    <Card key={index} label="?" value={0} status="default" />
-                  </CardWrapper>
-                )
-              )}
+              {Array.from(Array(LETTERS.length - orders.length).keys()).map((_key, index) => (
+                <CardWrapper key={index}>
+                  <Card key={index} label="?" value={0} status="default" />
+                </CardWrapper>
+              ))}
             </div>
 
             {!!showConfirm && (
@@ -73,8 +73,8 @@ const PageLayout: React.FC = () => {
                   <button
                     className="bg-blue-600 px-4 py-2 border-2 border-blue-600 rounded text-white max-w-max"
                     onClick={() => {
-                      setFlips([...flips, showConfirm]);
-                      setShowConfirm(null);
+                      setFlips([...flips, showConfirm])
+                      setShowConfirm(null)
                     }}
                   >
                     REVEAL
@@ -88,7 +88,7 @@ const PageLayout: React.FC = () => {
                 <div className="py-4"></div>
                 <div className="flex flex-row max-h-max">
                   {letters.map((letter, index) => {
-                    const isSelected = orders.some((item) => item === letter);
+                    const isSelected = orders.some((item) => item === letter)
 
                     return (
                       <CardWrapper key={index}>
@@ -97,12 +97,12 @@ const PageLayout: React.FC = () => {
                             label={letter}
                             status="selected"
                             onSelect={() => {
-                              setOrders([...orders, letter]);
+                              setOrders([...orders, letter])
                             }}
                           />
                         )}
                       </CardWrapper>
-                    );
+                    )
                   })}
                 </div>
               </>
@@ -113,10 +113,10 @@ const PageLayout: React.FC = () => {
             <button
               className="bg-blue-600 px-4 py-2 border-2 border-blue-600 rounded text-white max-w-max"
               onClick={() => {
-                handleReset();
-                const key = Math.floor(Math.random() * 7);
-                localStorage.setItem("lob_1key", key.toString());
-                setOneKey(key);
+                handleReset()
+                const key = Math.floor(Math.random() * 7)
+                localStorage.setItem('lob_1key', key.toString())
+                setOneKey(key)
               }}
             >
               START
@@ -131,17 +131,22 @@ const PageLayout: React.FC = () => {
           <br />
 
           <div className="flex">
-            {[
-              ...orders,
-              ...letters.filter((letter) => !orders.includes(letter)),
-            ].map((letter, index) => (
+            {orders.map((letter, index) => (
               <div
                 key={index}
                 className={`rounded-xl shadow-md max-h-max w-12 h-12 text-red-600 font-semibold bg-yellow-50 border-2 border-yellow-500 ml-1 mr-1 flex items-center justify-center ${
-                  letter === oneLetter ? "bg-yellow-300" : ""
+                  letter === oneLetter ? 'bg-yellow-300' : ''
                 }`}
               >
                 {letter === oneLetter ? 1 : 0}
+              </div>
+            ))}
+            {LETTERS.filter((letter) => !orders.includes(letter)).map((letter, index) => (
+              <div
+                key={index}
+                className={`rounded-xl shadow-md max-h-max w-12 h-12 border-2 ml-1 mr-1 flex items-center justify-center text-gray-500 bg-gray-50 border-gray-300 font-bold hover:bg-gray-300 hover:border-gray-500 cursor-help`}
+              >
+                ?
               </div>
             ))}
           </div>
@@ -157,7 +162,7 @@ const PageLayout: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PageLayout;
+export default PageLayout
