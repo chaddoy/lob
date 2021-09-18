@@ -77,7 +77,7 @@ const PageLayout: React.FC = () => {
                       setShowConfirm(null);
                     }}
                   >
-                    Reveal?
+                    REVEAL
                   </button>
                 </div>
               </>
