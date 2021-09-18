@@ -2,6 +2,13 @@ import React from 'react'
 import Card, { CardWrapper } from '../Card'
 
 const LETTERS = Array.from('abcdefg'.toUpperCase())
+const PRIZES: ['1k', '10k', '100k', '1m'] = ['1k', '10k', '100k', '1m']
+const MAX_PRIZES = {
+  '1k': 4,
+  '10k': 5,
+  '100k': 6,
+  '1m': 7,
+}
 
 const PageLayout: React.FC = () => {
   const [oneKey, setOneKey] = React.useState<number | null>(null)
@@ -10,6 +17,7 @@ const PageLayout: React.FC = () => {
   const [flips, setFlips] = React.useState<string[]>([])
   const [showConfirm, setShowConfirm] = React.useState<string | null>(null)
   const [is1M, setIs1M] = React.useState(true)
+  const [maxPrize, setMaxPrize] = React.useState<string>('1m')
   const fullOrders = orders.length === letters.length
   const oneLetter = oneKey !== null ? letters[oneKey] : null
 
@@ -21,10 +29,10 @@ const PageLayout: React.FC = () => {
     setOneKey(null)
   }
 
-  const handlePrizeChange = (value: boolean) => {
+  const handlePrizeChange = (maxPrize: '1k' | '10k' | '100k' | '1m') => {
     if (oneKey === null) {
-      setIs1M(value)
-      setLetters([...LETTERS].splice(0, value ? 7 : 4))
+      setMaxPrize(maxPrize)
+      setLetters([...LETTERS].splice(0, MAX_PRIZES[maxPrize]))
     }
   }
 
@@ -32,11 +40,6 @@ const PageLayout: React.FC = () => {
     const key = parseInt(localStorage.getItem('lob_1key') || '-1', 10)
     setOneKey(key >= 0 ? key : null)
   }, [])
-
-  React.useEffect(() => {
-    const key = parseInt(localStorage.getItem('lob_1key') || '-1', 10)
-    setOneKey(key >= 0 ? key : null)
-  }, [is1M])
 
   return (
     <div className="flex h-screen">
@@ -167,33 +170,25 @@ const PageLayout: React.FC = () => {
 
           <br />
 
-          <div className="cursor-pointer font-semibold text-lg flex">
-            <div
-              className={`ml-4 mr-4 cursor-pointer w-18 text-center ${oneKey !== null ? 'text-gray-400' : ''}`}
-              onClick={() => handlePrizeChange(false)}
-            >
-              <input
-                type="radio"
-                className="ml-1 mr-1 mr-2"
-                checked={!is1M}
-                onChange={() => handlePrizeChange(false)}
-                disabled={oneKey !== null}
-              />
-              1K
-            </div>
-            <div
-              className={`ml-4 mr-4 cursor-pointer w-18 text-center ${oneKey !== null ? 'text-gray-400' : ''}`}
-              onClick={() => handlePrizeChange(true)}
-            >
-              <input
-                type="radio"
-                className="ml-1 mr-1 mr-2"
-                checked={is1M}
-                onChange={() => handlePrizeChange(true)}
-                disabled={oneKey !== null}
-              />
-              1M
-            </div>
+          <div className="font-semibold text-lg flex">
+            <div className={`ml-2 w-18 text-center ${oneKey !== null ? 'text-gray-400' : ''}`}>Max prize:</div>
+            {PRIZES.map((prize) => (
+              <React.Fragment key={prize}>
+                <div
+                  className={`ml-2 mr-2 cursor-pointer w-18 text-center ${oneKey !== null ? 'text-gray-400' : ''}`}
+                  onClick={() => handlePrizeChange(prize)}
+                >
+                  <input
+                    type="radio"
+                    className="ml-1 mr-1 mr-2"
+                    checked={prize === maxPrize}
+                    onChange={() => handlePrizeChange(prize)}
+                    disabled={oneKey !== null}
+                  />
+                  {prize}
+                </div>
+              </React.Fragment>
+            ))}
           </div>
 
           <br />
