@@ -41,7 +41,7 @@ const PageLayout: React.FC = () => {
                     status={fullOrders ? 'selected' : 'default'}
                     flipped={flips.some((flip) => flip === letter)}
                     onFlipped={() => {
-                      const twoLeft = flips.length === 5
+                      const twoLeft = flips.length === LETTERS.length - 2
 
                       if (orders[0] !== letter && fullOrders && !twoLeft) {
                         setFlips([...flips, letter])
@@ -51,7 +51,7 @@ const PageLayout: React.FC = () => {
                         setShowConfirm(letter)
                       }
 
-                      if (flips.length >= 6) {
+                      if (flips.length >= LETTERS.length - 1) {
                         setFlips([...flips, letter])
                       }
                     }}
@@ -114,7 +114,7 @@ const PageLayout: React.FC = () => {
               className="bg-blue-600 px-4 py-2 border-2 border-blue-600 rounded text-white max-w-max"
               onClick={() => {
                 handleReset()
-                const key = Math.floor(Math.random() * 7)
+                const key = Math.floor(Math.random() * LETTERS.length)
                 localStorage.setItem('lob_1key', key.toString())
                 setOneKey(key)
               }}
@@ -141,7 +141,7 @@ const PageLayout: React.FC = () => {
                 {letter === oneLetter ? 1 : 0}
               </div>
             ))}
-            {LETTERS.filter((letter) => !orders.includes(letter)).map((letter, index) => (
+            {LETTERS.filter((letter) => !orders.includes(letter)).map((_letter, index) => (
               <div
                 key={index}
                 className={`rounded-xl shadow-md max-h-max w-12 h-12 border-2 ml-1 mr-1 flex items-center justify-center text-gray-500 bg-gray-50 border-gray-300 font-bold hover:bg-gray-300 hover:border-gray-500 cursor-help`}

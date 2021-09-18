@@ -26,8 +26,8 @@ const Card: React.FC<ICard> = ({
   const states = {
     default: 'text-gray-500 bg-gray-50 border-gray-300 hover:bg-gray-300 hover:border-gray-500 cursor-help',
     selected:
-      'text-red-300 bg-yellow-50 border-yellow-200 hover:text-red-400 hover:bg-yellow-100 hover:border-yellow-400 cursor-pointer',
-    flipped: 'text-red-600 bg-yellow-100 border-yellow-400',
+      'text-red-400 bg-yellow-50 border-yellow-300 hover:text-red-500 hover:bg-yellow-100 hover:border-yellow-400 cursor-pointer',
+    flipped: 'text-red-600 bg-yellow-200 border-yellow-500',
   }
   const stateClass = flipped ? states.flipped : states[status]
   const itemClass = `absolute max-h-max w-24 h-32 rounded-xl flex items-center justify-center h-full border-2 ${stateClass} ${className}`
