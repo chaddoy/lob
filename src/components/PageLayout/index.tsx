@@ -13,13 +13,12 @@ const PageLayout: React.FC = () => {
   const oneLetter = oneKey !== null ? letters[oneKey] : null;
 
   const handleReset = () => {
-    const key = Math.floor(Math.random() * 7);
-    localStorage.setItem("lob_1key", key.toString());
+    localStorage.removeItem("lob_1key");
     setLetters(LETTERS);
     setOrders([]);
     setFlips([]);
     setShowConfirm(null);
-    setOneKey(key);
+    setOneKey(null);
   };
 
   React.useEffect(() => {
@@ -115,6 +114,9 @@ const PageLayout: React.FC = () => {
               className="bg-blue-600 px-4 py-2 border-2 border-blue-600 rounded text-white max-w-max"
               onClick={() => {
                 handleReset();
+                const key = Math.floor(Math.random() * 7);
+                localStorage.setItem("lob_1key", key.toString());
+                setOneKey(key);
               }}
             >
               START
@@ -148,14 +150,9 @@ const PageLayout: React.FC = () => {
 
           <button
             className="bg-blue-600 px-4 py-2 border-2 border-blue-600 rounded text-white"
-            onClick={() => {
-              const key = Math.floor(Math.random() * 7);
-              localStorage.setItem("lob_1key", key.toString());
-              handleReset();
-              setOneKey(key);
-            }}
+            onClick={() => handleReset()}
           >
-            Randomize
+            RESET
           </button>
         </div>
       </div>
