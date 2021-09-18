@@ -1,13 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.test-border {
+  border: 4px solid orange !important;
+  box-sizing: border-box;
+}
+
+.lob-card {
+  transition: transform 1s;
+  transform-style: preserve-3d;
+}
+
+.lob-card.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.lob-card__face {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.lob-card__face--back {
+  transform: rotateY(180deg);
 }
