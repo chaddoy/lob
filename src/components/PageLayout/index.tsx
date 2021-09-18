@@ -9,22 +9,34 @@ const PageLayout: React.FC = () => {
   const [orders, setOrders] = React.useState<string[]>([])
   const [flips, setFlips] = React.useState<string[]>([])
   const [showConfirm, setShowConfirm] = React.useState<string | null>(null)
-  const fullOrders = orders.length === LETTERS.length
+  const [is1M, setIs1M] = React.useState(true)
+  const fullOrders = orders.length === letters.length
   const oneLetter = oneKey !== null ? letters[oneKey] : null
 
   const handleReset = () => {
     localStorage.removeItem('lob_1key')
-    setLetters(LETTERS)
     setOrders([])
     setFlips([])
     setShowConfirm(null)
     setOneKey(null)
   }
 
+  const handlePrizeChange = (value: boolean) => {
+    if (oneKey === null) {
+      setIs1M(value)
+      setLetters([...LETTERS].splice(0, value ? 7 : 4))
+    }
+  }
+
   React.useEffect(() => {
     const key = parseInt(localStorage.getItem('lob_1key') || '-1', 10)
     setOneKey(key >= 0 ? key : null)
   }, [])
+
+  React.useEffect(() => {
+    const key = parseInt(localStorage.getItem('lob_1key') || '-1', 10)
+    setOneKey(key >= 0 ? key : null)
+  }, [is1M])
 
   return (
     <div className="flex h-screen">
@@ -41,7 +53,7 @@ const PageLayout: React.FC = () => {
                     status={fullOrders ? 'selected' : 'default'}
                     flipped={flips.some((flip) => flip === letter)}
                     onFlipped={() => {
-                      const twoLeft = flips.length === LETTERS.length - 2
+                      const twoLeft = flips.length === letters.length - 2
 
                       if (orders[0] !== letter && fullOrders && !twoLeft) {
                         setFlips([...flips, letter])
@@ -51,7 +63,7 @@ const PageLayout: React.FC = () => {
                         setShowConfirm(letter)
                       }
 
-                      if (flips.length >= LETTERS.length - 1) {
+                      if (flips.length >= letters.length - 1) {
                         setFlips([...flips, letter])
                       }
                     }}
@@ -59,7 +71,7 @@ const PageLayout: React.FC = () => {
                 </CardWrapper>
               ))}
 
-              {Array.from(Array(LETTERS.length - orders.length).keys()).map((_key, index) => (
+              {Array.from(Array(letters.length - orders.length).keys()).map((_key, index) => (
                 <CardWrapper key={index}>
                   <Card key={index} label="?" value={0} status="default" />
                 </CardWrapper>
@@ -114,7 +126,7 @@ const PageLayout: React.FC = () => {
               className="bg-blue-600 px-4 py-2 border-2 border-blue-600 rounded text-white max-w-max"
               onClick={() => {
                 handleReset()
-                const key = Math.floor(Math.random() * LETTERS.length)
+                const key = Math.floor(Math.random() * letters.length)
                 localStorage.setItem('lob_1key', key.toString())
                 setOneKey(key)
               }}
@@ -141,14 +153,47 @@ const PageLayout: React.FC = () => {
                 {letter === oneLetter ? 1 : 0}
               </div>
             ))}
-            {LETTERS.filter((letter) => !orders.includes(letter)).map((_letter, index) => (
-              <div
-                key={index}
-                className={`rounded-xl shadow-md max-h-max w-12 h-12 border-2 ml-1 mr-1 flex items-center justify-center text-gray-500 bg-gray-50 border-gray-300 font-bold hover:bg-gray-300 hover:border-gray-500 cursor-help`}
-              >
-                ?
-              </div>
-            ))}
+            {letters
+              .filter((letter) => !orders.includes(letter))
+              .map((_letter, index) => (
+                <div
+                  key={index}
+                  className={`rounded-xl shadow-md max-h-max w-12 h-12 border-2 ml-1 mr-1 flex items-center justify-center text-gray-500 bg-gray-50 border-gray-300 font-bold hover:bg-gray-300 hover:border-gray-500 cursor-help`}
+                >
+                  ?
+                </div>
+              ))}
+          </div>
+
+          <br />
+
+          <div className="cursor-pointer font-semibold text-lg flex">
+            <div
+              className={`ml-4 mr-4 cursor-pointer w-18 text-center ${oneKey !== null ? 'text-gray-400' : ''}`}
+              onClick={() => handlePrizeChange(false)}
+            >
+              <input
+                type="radio"
+                className="ml-1 mr-1 mr-2"
+                checked={!is1M}
+                onChange={() => handlePrizeChange(false)}
+                disabled={oneKey !== null}
+              />
+              1K
+            </div>
+            <div
+              className={`ml-4 mr-4 cursor-pointer w-18 text-center ${oneKey !== null ? 'text-gray-400' : ''}`}
+              onClick={() => handlePrizeChange(true)}
+            >
+              <input
+                type="radio"
+                className="ml-1 mr-1 mr-2"
+                checked={is1M}
+                onChange={() => handlePrizeChange(true)}
+                disabled={oneKey !== null}
+              />
+              1M
+            </div>
           </div>
 
           <br />
