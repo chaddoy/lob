@@ -134,7 +134,7 @@ const PageLayout: React.FC = () => {
             {orders.map((letter, index) => (
               <div
                 key={index}
-                className={`rounded-xl shadow-md max-h-max w-12 h-12 text-red-600 font-semibold bg-yellow-50 border-2 border-yellow-500 ml-1 mr-1 flex items-center justify-center ${
+                className={`rounded-xl shadow-md max-h-max w-12 h-12 text-red-600 text-2xl font-semibold bg-yellow-100 border-2 border-yellow-400 ml-1 mr-1 flex items-center justify-center ${
                   letter === oneLetter ? 'bg-yellow-300' : ''
                 }`}
               >
